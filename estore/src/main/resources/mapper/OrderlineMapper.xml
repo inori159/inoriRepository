@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.briup.app.estore.mapper.OrderlineMapper">
+  <resultMap id="BaseResultMap" type="com.briup.app.estore.bean.Orderline">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="num" jdbcType="INTEGER" property="num" />
+    
+    <association property="order" resultMap="com.briup.app.estore.mapper.OrderMapper.BaseResultMap"></association>
+    <association property="book" resultMap="com.briup.app.estore.mapper.BookMapper.BaseResultMap"></association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from tbl_orderline
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <delete id="deleteByOrderId" parameterType="java.lang.Integer">
+    delete from tbl_orderline
+    where order_id = #{order_id,jdbcType=INTEGER}
+  </delete>
+
+
+
+  <insert id="insert" parameterType="com.briup.app.estore.bean.Orderline">
+    insert into tbl_orderline (id, num, order_id, 
+      book_id)
+    values (#{id,jdbcType=INTEGER}, #{num,jdbcType=INTEGER}, #{order.id,jdbcType=INTEGER}, 
+      #{book.id,jdbcType=INTEGER})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.briup.app.estore.bean.Orderline">
+    update tbl_orderline
+    set num = #{num,jdbcType=INTEGER},
+      order_id = #{orderId,jdbcType=INTEGER},
+      book_id = #{bookId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select id, num, order_id, book_id
+    from tbl_orderline
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap">
+    select id, num, order_id, book_id
+    from tbl_orderline
+  </select>
+  
+    <select id="selectByOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+	select tol.num,tb.name,tb.price,tod.cost
+	from tbl_orderline tol,tbl_book tb,tbl_order tod
+	where 
+	tod.id = tol.order_id and
+	tol.book_id = tb.id and
+    tol.order_id = #{id,jdbcType=INTEGER}
+  </select>
+  
+</mapper>
